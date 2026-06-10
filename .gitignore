@@ -1,0 +1,12 @@
+# Ignore compiled executable files
+*.exe
+*.out
+a.out
+
+# Ignore object files
+*.o
+
+# Ignore build directories if you use CMake or Make
+build/
+.vscode/
+

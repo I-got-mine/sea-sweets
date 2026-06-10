@@ -1,0 +1,132 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include "../include/ds/csweets.h"
+
+#define CAPACITY(array) ((array)->size / sizeof(int))
+
+// todo: failure message function
+
+int_array create_int_array(size_t number_elements)
+{
+    if (number_elements < 1) {
+        number_elements = 4;
+    }
+    size_t size = number_elements * sizeof(int); 
+    int_array new_array;
+    new_array.array = malloc(size);
+    if (new_array.array == NULL) {
+        printf("Out of memory, exiting . . .\n");
+        exit(EXIT_FAILURE);
+    }
+    new_array.length = 0;
+    new_array.size = size;
+
+    return new_array;
+}
+
+bool delete_int_array(int_array *an_array)
+{
+if (an_array->array) {
+        free(an_array->array);
+        an_array->array = NULL;
+        an_array->size = 0;
+        an_array->length = 0;
+        return true;
+    }
+    return false;
+}
+
+bool is_space(int_array *an_array)
+{
+    if (CAPACITY(an_array) <= an_array->length) 
+        return false;                             
+    return true;
+}
+
+bool index_exists(int_array *an_array, size_t index)
+{
+    if (an_array->length <= index)
+        return false;
+    return true;
+}
+
+bool expand_array(int_array *an_array)   {
+    size_t new_size = (an_array->size) * 2;
+    int *tmp = realloc(an_array->array, new_size);
+    if (tmp == NULL) {
+        return false;
+    }                        
+    an_array->array = tmp;
+    an_array->size = new_size;
+    return true;
+}
+
+bool make_room(int_array *an_array) // TODO: deal with expand_array failure
+    {                               //       and return a bool
+        if (is_space(an_array) == false) {
+            expand_array(an_array);
+            return true;
+        }
+        return false;
+    }
+
+void append(int_array *an_array, int an_integer){
+    make_room(an_array);
+    an_array->array[an_array->length] = an_integer;
+    an_array->length++;
+} 
+
+// TODO: make everything bool and return false if make_room == false
+//       NO PRINTF()!! THIS IS A LIBRARY
+//
+
+void insert(int_array *an_array, size_t index, int item)
+{
+    if (index_exists(an_array, index) == false) {
+        printf("Index doesn't exist");
+        exit(EXIT_FAILURE);
+    }
+    make_room(an_array);
+    size_t length_after = an_array->length - index;
+    size_t final_index = an_array->length;
+
+    for (size_t i = final_index; i > index; i--) {
+        an_array->array[i] = an_array->array[i - 1];
+    }
+    an_array->array[index] = item;
+    an_array->length++;
+}
+
+void delete_item(int_array *an_array, size_t index)
+{
+    if (index_exists(an_array, index) == false) {
+        printf("Index doesn't exist");
+        exit(EXIT_FAILURE);
+    }
+    for (size_t i = index; i + 1 < an_array->length; i++) {
+        an_array->array[i] = an_array->array[i+1];
+    }
+    an_array->length--;
+}   
+
+bool search(int_array *an_array, int item, size_t *index)
+{
+    for (size_t i = 0; i < an_array->length; i++)
+        if (an_array->array[i] == item) {
+            if (index != NULL)
+                *index = i;
+            return true;
+        }
+    return false;
+}
+
+
+bool get(int_array *an_array, size_t index, int *element)
+{
+    if (index_exists(an_array, index)) {
+        if (element != NULL)
+            *element = an_array->array[index];
+        return true;
+    }
+    return false;
+}
