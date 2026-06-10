@@ -62,15 +62,32 @@ bool expand_array(int_array *an_array)   {
 }
 
 bool make_room(int_array *an_array) 
-    {                             
-        if (is_space(an_array) == false) {
-            if (expand_array(an_array)) {
+{                             
+    if (is_space(an_array) == false) {
+        if (expand_array(an_array)) {
+            return true;
+        }
+        return false;
+    }
+    return true;
+}
+
+bool shrink_to_fit(int_array *an_array)
+{
+    if (CAPACITY(an_array) == an_array->length || an_array->length == 0)
+        return true;
+    if (CAPACITY(an_array) > an_array->length) {
+        size_t length_in_bytes = sizeof(int) * an_array->length;
+        int *tmp = realloc(an_array->array, length_in_bytes);
+        if (tmp != NULL) {
+                an_array->array = tmp;
+                an_array->size = length_in_bytes;
                 return true;
             }
-            return false;
-        }
-        return true;
     }
+
+    return false;
+}
 
 bool append(int_array *an_array, int an_integer){
     if (make_room(an_array)) {
@@ -149,4 +166,18 @@ bool max(int_array *an_array, int *max_element)
     return false;
 }
 
+bool min(int_array *an_array, int *min_element) {
+    if (min_element != NULL) {
+        if (an_array->length > 0) {
+            *min_element = an_array->array[0];
+            for (size_t i = 0; i < an_array->length; i++) {
+                if (an_array->array[i] < *min_element) {
+                    *min_element = an_array->array[i];
+                }
+            }
+            return true;
+        }
+    }
+    return false;
+}
 
