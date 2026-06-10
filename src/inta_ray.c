@@ -30,7 +30,7 @@ if (an_array->array) {
         free(an_array->array);
         an_array->array = NULL;
         an_array->size = 0;
-        an_array->length = 0;
+  an_array->length = 0;
         return true;
     }
     return false;
@@ -61,52 +61,54 @@ bool expand_array(int_array *an_array)   {
     return true;
 }
 
-bool make_room(int_array *an_array) // TODO: deal with expand_array failure
-    {                               //       and return a bool
+bool make_room(int_array *an_array) 
+    {                             
         if (is_space(an_array) == false) {
-            expand_array(an_array);
-            return true;
+            if (expand_array(an_array)) {
+                return true;
+            }
+            return false;
         }
-        return false;
+        return true;
     }
 
-void append(int_array *an_array, int an_integer){
-    make_room(an_array);
-    an_array->array[an_array->length] = an_integer;
-    an_array->length++;
+bool append(int_array *an_array, int an_integer){
+    if (make_room(an_array)) {
+        an_array->array[an_array->length] = an_integer;
+        an_array->length++;
+        return true;
+    }
+    return false;
 } 
 
-// TODO: make everything bool and return false if make_room == false
-//       NO PRINTF()!! THIS IS A LIBRARY
-//
-
-void insert(int_array *an_array, size_t index, int item)
+bool insert(int_array *an_array, size_t index, int item)
 {
-    if (index_exists(an_array, index) == false) {
-        printf("Index doesn't exist");
-        exit(EXIT_FAILURE);
-    }
-    make_room(an_array);
-    size_t length_after = an_array->length - index;
-    size_t final_index = an_array->length;
+    if (index_exists(an_array, index)) {
+        if (make_room(an_array)) {
+            size_t length_after = an_array->length - index;
+            size_t final_index = an_array->length;
 
-    for (size_t i = final_index; i > index; i--) {
-        an_array->array[i] = an_array->array[i - 1];
+            for (size_t i = final_index; i > index; i--) {
+                an_array->array[i] = an_array->array[i - 1];
+            }
+            an_array->array[index] = item;
+            an_array->length++;
+            return true;
+        }
     }
-    an_array->array[index] = item;
-    an_array->length++;
+    return false;
 }
 
-void delete_item(int_array *an_array, size_t index)
+bool delete_item(int_array *an_array, size_t index)
 {
-    if (index_exists(an_array, index) == false) {
-        printf("Index doesn't exist");
-        exit(EXIT_FAILURE);
+    if (index_exists(an_array, index)) {
+       for (size_t i = index; i + 1 < an_array->length; i++) {
+            an_array->array[i] = an_array->array[i+1];
+        }
+        an_array->length--;
+        return true;
     }
-    for (size_t i = index; i + 1 < an_array->length; i++) {
-        an_array->array[i] = an_array->array[i+1];
-    }
-    an_array->length--;
+    return false;
 }   
 
 bool search(int_array *an_array, int item, size_t *index)
@@ -130,3 +132,21 @@ bool get(int_array *an_array, size_t index, int *element)
     }
     return false;
 }
+
+bool max(int_array *an_array, int *max_element)
+{
+    if (max_element != NULL) {
+        if (an_array->length > 0) {
+            *max_element = an_array->array[0];
+            for (size_t i = 0; i < an_array->length; i++) {
+                if (an_array->array[i] > *max_element) {
+                    *max_element = an_array->array[i];
+                }
+            }
+            return true;
+        }
+    }
+    return false;
+}
+
+
