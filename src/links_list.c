@@ -43,29 +43,55 @@ bool push_back(ll_head *head, int item)
     return true;
 }
 
-bool pop_front(ll_head *head)
+bool pop_front(ll_head *head, int *value)
 {
     if (head->length == 0) {
         return false;
     }
     ll_node *to_go = head->head;
+    if (value != NULL) {
+        *value = to_go->item;
+    }
     head->head = to_go->next;
     head->length--;
     free(to_go);
     return true;
 }
 
-bool pop_back(ll_head *head)
+bool pop_back(ll_head *head, int *value)
 {
     if (head->length == 0) {
         return false;
+    }
+    if (head->length == 1) {
+        pop_front(head, value);
+        return true;
     }
     ll_node *pointer = head->head;
     for (size_t i = 0; i < head->length - 2; i++) {
         pointer = pointer->next;
     }
+    if (value != NULL) {
+        *value = pointer->next->item;
+    }
     free(pointer->next);
     pointer->next = NULL;
-    head->length=0;
+    head->length--;
+    return true;
+}
+
+bool remove_at(ll_head *head, size_t index)
+{
+    if (index >= head->length || index == 0) {
+        return false;
+    }
+    ll_node *pointer = head->head;
+    for (size_t i = 1; i < index; i++) {
+        pointer = pointer->next;
+    }
+    ll_node *to_remove = pointer->next;
+    pointer->next = to_remove->next;
+    free(to_remove);
+    head->length--;
     return true;
 }
