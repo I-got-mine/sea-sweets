@@ -95,3 +95,18 @@ bool remove_at(ll_head *head, size_t index)
     head->length--;
     return true;
 }
+
+bool get_at(ll_head *head, size_t index, int *got_item)
+{
+    if (index >= head->length || index == 0) {
+        return false;
+    }
+    ll_node *pointer = head->head;
+    for (size_t i = 0; i < index; i++) {
+        pointer = pointer->next;
+    }
+    if (got_item != NULL) {
+    *got_item = pointer->item;
+    }
+    return true;
+}
