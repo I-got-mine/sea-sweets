@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <stdlib.h>
 #include "../include/ds/csweets.h"
 
@@ -80,4 +81,54 @@ bool insert_at_dll(dll_head *head, size_t index, int item)
     pointer->previous = new_node;
     head->length++;
     return true;
+}
+
+bool pop_front_dll(dll_head *head, int *item)
+{
+
+    if (head->header->next != head->trailer) {
+        if (item != NULL) {
+            *item = head->header->next->item;
+        }
+        dll_node *tmp = head->header->next;
+        tmp->next->previous=head->header;
+        head->header->next=tmp->next;
+        free(tmp);
+        head->length--;
+        return true;
+    }
+    return false;
+}
+
+bool pop_back_dll(dll_head *head, int *item)
+{
+
+    if((head->header->next != head->trailer)) {
+        if (item != NULL) {
+            *item = head->trailer->previous->item;
+        }
+        dll_node *tmp = head->trailer->previous;
+        tmp->previous->next= head->trailer;
+        head->trailer->previous = tmp->previous;
+        free(tmp);
+        head->length--;
+        return true;
+    }
+    return false;
+}
+
+bool print_forward(dll_head *head)
+{
+    size_t index_counter = 1; 
+    dll_node *print_pointer = head->header->next;
+    if (head->header->next != head->trailer) {
+        while(print_pointer != head->trailer) {
+            print_pointer = print_pointer->next;
+            printf("Memory address: %p\tIndex: %zu\tValue:% d\n",
+                    print_pointer, index_counter, print_pointer->item);
+            index_counter += 1;
+        }
+        return true;
+    }
+    return false;
 }
