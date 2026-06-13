@@ -117,7 +117,7 @@ bool pop_back_dll(dll_head *head, int *item)
     return false;
 }
 
-bool print_forward(dll_head *head)
+void print_forward(dll_head *head)
 {
     size_t index_counter = 1; 
     dll_node *print_pointer = head->header->next;
@@ -128,7 +128,5 @@ bool print_forward(dll_head *head)
                     print_pointer, index_counter, print_pointer->item);
             index_counter += 1;
         }
-        return true;
     }
-    return false;
 }

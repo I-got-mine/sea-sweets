@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <stdlib.h>
 #include "../include/ds/csweets.h"
 
@@ -89,7 +90,7 @@ bool remove_at(ll_head *head, size_t index)
     for (size_t i = 1; i < index; i++) {
         pointer = pointer->next;
     }
-    ll_node *to_remove = pointer->next;
+ ll_node *to_remove = pointer->next;
     pointer->next = to_remove->next;
     free(to_remove);
     head->length--;
@@ -109,4 +110,15 @@ bool get_at(ll_head *head, size_t index, int *got_item)
     *got_item = pointer->item;
     }
     return true;
+}
+
+void print(ll_head *head)
+{
+    ll_node *print_pointer = head->head;
+    for(size_t i = 0; i < head->length; i++)
+    {
+        printf("Memory address: %p\tIndex: %zu\tValue:% d\n",
+                print_pointer, i, print_pointer->item);
+        print_pointer = print_pointer->next;
+    }
 }

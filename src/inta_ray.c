@@ -6,7 +6,7 @@
 
 // todo: failure message function
 
-int_array create_int_array(size_t number_elements)
+bool create_int_array(size_t number_elements, int_array *an_array)
 {
     if (number_elements < 1) {
         number_elements = 4;
@@ -181,3 +181,11 @@ bool min(int_array *an_array, int *min_element) {
     return false;
 }
 
+void print_array(int_array *an_array)
+{
+    for (size_t i = 0; i < an_array->length; i++)
+    { 
+        printf("Memory address: %p\tIndex: %zu\tValue:% d\n",
+                &an_array->array[i], i, an_array->array[i]);
+    }
+}
